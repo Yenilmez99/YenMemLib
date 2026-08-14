@@ -1,13 +1,12 @@
-#include "memprocess.h"
-
+#include <string>
 #include <cstddef>
-#include <memoryapi.h>
-#include <minwindef.h>
-#include <ostream>
-#include <windows.h>
-#include <winnt.h>
+#include <cstdint> 
 #include <iostream>
+
+#include <windows.h>
 #include <tlhelp32.h>
+
+#include "memprocess.h"
 
 int yen::memprocess::get_pid(const std::wstring& processName) 
 {
@@ -80,7 +79,7 @@ bool yen::memprocess::Process::is_alive()
 
     return exitCode == STILL_ACTIVE;
 }
-bool yen::memprocess::Process::read(const uintptr_t& address, void* buffer, const size_t& size)
+bool yen::memprocess::Process::read(const std::uintptr_t& address, void* buffer, const std::size_t& size)
 {
     if (!hProcess) return false;
 
@@ -91,11 +90,11 @@ bool yen::memprocess::Process::read(const uintptr_t& address, void* buffer, cons
     }
         
     DWORD error = GetLastError();
-    std::cout<< "Read Error: " << error << std::endl;
+    std::cout << "Read Error: " << error << std::endl;
 
     return false;
 }
-bool yen::memprocess::Process::write(const uintptr_t& address, const void* buffer, const size_t& size)
+bool yen::memprocess::Process::write(const std::uintptr_t& address, const void* buffer, const std::size_t& size)
 {
     if (!hProcess) return false;
 
@@ -113,18 +112,18 @@ bool yen::memprocess::Process::write(const uintptr_t& address, const void* buffe
 
     return false;
 }
-bool yen::memprocess::Process::write_force(const uintptr_t& address, const void* buffer, const size_t& size)
+bool yen::memprocess::Process::write_force(const std::uintptr_t& address, const void* buffer, const std::size_t& size)
 {
-    unsigned long oldProtect;
+    DWORD oldProtect;
     
-    if (VirtualProtectEx(hProcess, reinterpret_cast<void*>(address), size, 0x40, &oldProtect)) 
+    if (VirtualProtectEx(hProcess, reinterpret_cast<LPVOID>(address), size, PAGE_EXECUTE_READWRITE, &oldProtect)) 
     {
-        size_t bytesWritten = 0;
+        SIZE_T bytesWritten = 0;
         
-        WriteProcessMemory(hProcess, reinterpret_cast<void*>(address), buffer, size, &bytesWritten);
+        WriteProcessMemory(hProcess, reinterpret_cast<LPVOID>(address), buffer, size, &bytesWritten);
         
-        unsigned long tempProtect;
-        VirtualProtectEx(hProcess, reinterpret_cast<void*>(address), size, oldProtect, &tempProtect);
+        DWORD tempProtect = 0;
+        VirtualProtectEx(hProcess, reinterpret_cast<LPVOID>(address), size, oldProtect, &tempProtect);
         
         return bytesWritten == size;
     }
