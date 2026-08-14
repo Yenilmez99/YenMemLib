@@ -1,18 +1,14 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdlib>
-#include <cstdint>
-#include <string>
 #include <vector>
-
-using namespace std;
+#include <string>
+#include <cstdint>
 
 namespace yen {
 
     namespace memprocess {
 
-        int get_pid(const wstring& processName);
+        int get_pid(const std::wstring& processName);
 
         class Process
         {
@@ -26,15 +22,15 @@ namespace yen {
             bool init(int pid);
             void terminate();
             bool is_alive();
-            bool read(const uintptr_t& address, void* buffer, const size_t& size);
-            bool write(const uintptr_t& address,const void* buffer, const size_t& size);
-            bool write_force(const uintptr_t& address,const void* buffer, const size_t& size);
-            uintptr_t get_pointer_address(const uintptr_t& address, const vector<ptrdiff_t>& offsets) {
+            bool read(const std::uintptr_t& address, void* buffer, const std::size_t& size);
+            bool write(const std::uintptr_t& address,const void* buffer, const std::size_t& size);
+            bool write_force(const std::uintptr_t& address,const void* buffer, const std::size_t& size);
+            std::uintptr_t get_pointer_address(const std::uintptr_t& address, const std::vector<ptrdiff_t>& offsets) {
                 if (offsets.empty()) return address;
                 
-                uintptr_t temp_address = address;
+                std::uintptr_t temp_address = address;
                 
-                for (size_t i = 0; i < offsets.size(); ++i)
+                for (std::size_t i = 0; i < offsets.size(); ++i)
                 {
                     temp_address += offsets[i];
 
@@ -52,15 +48,15 @@ namespace yen {
             }
 
             template<typename T>
-            bool read(const uintptr_t& address, T& value) {
+            bool read(const std::uintptr_t& address, T& value) {
                 return read(address, &value, sizeof(T));
             }
             template<typename T>
-            bool write(const uintptr_t& address,const T& value) {
+            bool write(const std::uintptr_t& address,const T& value) {
                 return write(address, &value, sizeof(T));
             }
             template<typename T>
-            bool write_force(const uintptr_t& address,const T& value) {
+            bool write_force(const std::uintptr_t& address,const T& value) {
                 return write_force(address, &value, sizeof(T));
             }
 

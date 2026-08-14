@@ -82,7 +82,7 @@ bool yen::memprocess::Process::is_alive()
     if (target_pid == -1 || target_pid == 0) return false;
     return kill(target_pid,0) == 0;
 }
-bool yen::memprocess::Process::read(const uintptr_t& address, void* buffer, const size_t& size)
+bool yen::memprocess::Process::read(const std::uintptr_t& address, void* buffer, const std::size_t& size)
 {
     if (!is_alive()) return false;
 
@@ -101,7 +101,7 @@ bool yen::memprocess::Process::read(const uintptr_t& address, void* buffer, cons
     std::cout << "Read Error: " << strerror(errno) << " Bytes read: " << bytes_read << std::endl;
     return false;
 }
-bool yen::memprocess::Process::write(const uintptr_t& address, const void* buffer, const size_t& size)
+bool yen::memprocess::Process::write(const std::uintptr_t& address, const void* buffer, const std::size_t& size)
 {
     if (!is_alive()) return false;
 
@@ -120,7 +120,7 @@ bool yen::memprocess::Process::write(const uintptr_t& address, const void* buffe
     std::cout << "Write Error" << std::endl;
     return false;
 }
-bool yen::memprocess::Process::write_force(const uintptr_t& address, const void* buffer, const size_t& size)
+bool yen::memprocess::Process::write_force(const std::uintptr_t& address, const void* buffer, const std::size_t& size)
 {
     std::string memPath = "/proc/" + std::to_string(target_pid) + "/mem";
     
