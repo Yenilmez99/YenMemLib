@@ -18,7 +18,7 @@ if(WIN32)
     list(APPEND SOURCE_FILES
         src/platform_windows.cpp
     )
-elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
     list(APPEND SOURCE_FILES
         src/platform_linux.cpp
     )
