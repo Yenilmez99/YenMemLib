@@ -32,7 +32,7 @@ int yen::memprocess::get_pid(const std::wstring& processName)
     }
     return pid;
 }
-std::uintptr_t yen::memprocess::Process::get_module_base_address(const std::wstring& w_module_name)
+std::uintptr_t yen::memprocess::get_module_base_address(const int& pid, const std::wstring& w_module_name)
 {
     std::uintptr_t base_address = 0;
 

@@ -9,6 +9,7 @@ namespace yen {
     namespace memprocess {
 
         int get_pid(const std::wstring& processName);
+        std::uintptr_t get_module_base_address(const int& pid, const std::wstring& module_name);
 
         class Process
         {
@@ -26,7 +27,6 @@ namespace yen {
             bool read(const std::uintptr_t& address, void* buffer, const std::size_t& size);
             bool write(const std::uintptr_t& address,const void* buffer, const std::size_t& size);
             bool write_force(const std::uintptr_t& address,const void* buffer, const std::size_t& size);
-            std::uintptr_t get_module_base_address(const std::wstring& module_name);
             std::uintptr_t get_pointer_address(const std::uintptr_t& address, const std::vector<ptrdiff_t>& offsets) {
                 if (offsets.empty()) return address;
                 
