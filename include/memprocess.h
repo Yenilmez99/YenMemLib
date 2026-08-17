@@ -9,13 +9,15 @@ namespace yen {
     namespace memprocess {
 
         int get_pid(const std::wstring& processName);
+        std::uintptr_t get_module_base_address(int pid, const std::string& module_name);
 
         class Process
         {
         private:
+        public:
             void* hProcess = nullptr; // for windows
             int target_pid = -1; // for linux
-        public:
+
             Process(int pid);
             ~Process();
 

@@ -7,6 +7,7 @@
 #include <dirent.h>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <algorithm>
 #include <sys/uio.h>
 #include <sys/types.h>
@@ -51,6 +52,33 @@ int yen::memprocess::get_pid(const std::wstring& processName)
     
     return target_pid;
 }
+std::uintptr_t yen::memprocess::get_module_base_address(int pid, const std::string& module_name)
+{
+    std::string maps_path = "/proc/" + std::to_string(pid) + "/maps";
+    std::ifstream maps_file(maps_path);
+    std::string line;
+
+    if (!maps_file.is_open()) {
+        std::cerr << "Maps file couldn't opened." << std::endl;
+        return 0;
+    }
+
+    while (std::getline(maps_file, line)) {
+        if (line.find(module_name) != std::string::npos) {
+
+            size_t dash_pos = line.find('-');
+            if (dash_pos != std::string::npos) {
+                std::string start_addr_str = line.substr(0, dash_pos);
+
+                return std::stoull(start_addr_str, nullptr, 16);
+            }
+        }
+    }
+
+    std::cerr << "Module couldnt found." << std::endl;
+    return 0;
+}
+
 yen::memprocess::Process::Process(int pid)
 {
     init(pid);
