@@ -52,9 +52,9 @@ int yen::memprocess::get_pid(const std::wstring& processName)
     
     return target_pid;
 }
-std::uintptr_t yen::memprocess::get_module_base_address(int pid, const std::string& module_name)
+std::uintptr_t yen::memprocess::Process::get_module_base_address(const std::wstring& w_module_name)
 {
-    std::string maps_path = "/proc/" + std::to_string(pid) + "/maps";
+    std::string maps_path = "/proc/" + std::to_string(target_pid) + "/maps";
     std::ifstream maps_file(maps_path);
     std::string line;
 
@@ -64,6 +64,7 @@ std::uintptr_t yen::memprocess::get_module_base_address(int pid, const std::stri
     }
 
     while (std::getline(maps_file, line)) {
+        std::string module_name(w_module_name.begin(), w_module_name.end());
         if (line.find(module_name) != std::string::npos) {
 
             size_t dash_pos = line.find('-');
@@ -78,7 +79,6 @@ std::uintptr_t yen::memprocess::get_module_base_address(int pid, const std::stri
     std::cerr << "Module couldnt found." << std::endl;
     return 0;
 }
-
 yen::memprocess::Process::Process(int pid)
 {
     init(pid);

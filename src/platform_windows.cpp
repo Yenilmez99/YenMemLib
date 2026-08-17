@@ -32,28 +32,26 @@ int yen::memprocess::get_pid(const std::wstring& processName)
     }
     return pid;
 }
-std::uintptr_t yen::memprocess::get_module_base_address(int pid, const std::string& module_name)
+std::uintptr_t yen::memprocess::Process::get_module_base_address(const std::wstring& w_module_name)
 {
     std::uintptr_t base_address = 0;
 
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
 
     if (snapshot != INVALID_HANDLE_VALUE) {
-        MODULEENTRY32 module_entry;
+        MODULEENTRY32W module_entry;
         module_entry.dwSize = sizeof(module_entry);
 
-        if (Module32First(snapshot, &module_entry)) {
+        if (Module32FirstW(snapshot, &module_entry)) {
             do {
-                std::wstring w_module_name(module_name.begin(), module_name.end());
-                if (module_name == module_entry.szModule) {
+                if (w_module_name == module_entry.szModule) {
 
                     base_address = reinterpret_cast<std::uintptr_t>(module_entry.modBaseAddr);
                     break;
                 }
-            } while (Module32Next(snapshot, &module_entry));
+            } while (Module32NextW(snapshot, &module_entry));
         }
 
-        // İşlem bitince bellek sızıntısını önlemek için handle'ı kapat
         CloseHandle(snapshot);
     }
 
