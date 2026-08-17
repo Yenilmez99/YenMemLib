@@ -34,15 +34,11 @@ namespace yen {
                 
                 for (std::size_t i = 0; i < offsets.size(); ++i)
                 {
-                    temp_address += offsets[i];
-
-                    if (i < offsets.size() - 1) {
-
-                        if (!read(temp_address, &temp_address, sizeof(temp_address))) {
-                            return 0;
-                        }
-
+                    if (!read(temp_address, &temp_address, sizeof(temp_address))) {
+                        return 0;
                     }
+
+                    temp_address += offsets[i];
                     
                 }
 
