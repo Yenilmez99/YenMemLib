@@ -140,6 +140,8 @@ bool yen::memprocess::Process::write(const std::uintptr_t& address, const void* 
 }
 bool yen::memprocess::Process::write_force(const std::uintptr_t& address, const void* buffer, const std::size_t& size)
 {
+    if (!hProcess) return false;
+
     DWORD oldProtect;
     
     if (VirtualProtectEx(hProcess, reinterpret_cast<LPVOID>(address), size, PAGE_EXECUTE_READWRITE, &oldProtect)) 
